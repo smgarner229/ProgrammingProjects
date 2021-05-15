@@ -50,9 +50,29 @@ class molecule
         ~internal_angle(){};
     };
 
+    struct outofplane_angle
+    {
+        int i,j,k,l;
+        double angle;
+
+        outofplane_angle(int i, int j, int k, int l, double angle):
+            i(i),j(j),k(k),l(l),angle(angle) {};
+    };
+
+    struct torsion_angle
+    {
+        int i,j,k,l;
+        double angle;
+
+        torsion_angle(int i, int j, int k, int l, double angle):
+            i(i),j(j),k(k),l(l),angle(angle) {};
+    };
+
     std::vector<particle> nuclei;
     std::vector<bond> bonds;
     std::vector<internal_angle> internal_angles;
+    std::vector<outofplane_angle> outofplane_angles;
+    std::vector<torsion_angle> torsion_angles;
 
     molecule(){}; //Constructor
     ~molecule(){};//Destructor
@@ -60,6 +80,8 @@ class molecule
     void add_neucleus(double charge, double x, double y, double z);
     void calc_bond_lengths();
     void calc_bond_angles();
+    void calc_outofplane_angle();
+    
 
     friend std::ostream& operator <<(std::ostream & os, molecule & mol);
 

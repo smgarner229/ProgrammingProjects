@@ -55,3 +55,24 @@
             " " << internal_angles[i].from << " " << internal_angles[i].angle << std::endl;
         }
     }
+
+    void molecule::calc_outofplane_angle()
+    {
+        for(size_t i = 0; i < nuclei.size(); i++)
+        {
+            for(size_t j = i+1; j < nuclei.size(); j++)
+            {
+                for(size_t k = j+1; k < nuclei.size(); k++)
+                {
+                    for(size_t l = k+1; l < nuclei.size(); l++)
+                    {
+                        if(calc_distances(nuclei[i],nuclei[k]) < 4.0 && calc_distances(nuclei[k],nuclei[j]) < 4.0 && calc_distances(nuclei[k],nuclei[l]))
+                        {
+                            outofplane_angles.push_back(outofplane_angle(i,j,k,l,calc_out_of_plane_angle(nuclei[i],nuclei[j],nuclei[k],nuclei[l])));
+                            std::cout << i << " " << j << " " << k << " " << l << " " << outofplane_angles.at(outofplane_angles.size()-1).angle << std::endl;
+                        }
+                    }
+                }
+            }
+        }
+    }

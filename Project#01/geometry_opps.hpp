@@ -50,4 +50,9 @@ double calc_angle(const particle & B, const particle & A, const particle & C)
     return std::acos(dot_product(unit_vector(A,B), unit_vector(C,B)))*180./M_PI;
 }
 
+double calc_out_of_plane_angle(const particle & i, const particle & j, const particle & k, const particle & l)
+{
+    return std::asin(dot_product(cross_prodcut(unit_vector(j,k),unit_vector(l,k)),unit_vector(i,k))/(std::sin(std::acos(calc_angle(j,k,l)))))*180./M_PI;
+}
+
 #endif
