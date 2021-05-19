@@ -1,6 +1,10 @@
 #ifndef MOLECULE_HPP
 #define MOLECULE_HPP
 
+#ifndef PRINT
+#define PRINT 0
+#endif 
+
 #include <vector>
 #include <iostream>
 
@@ -78,9 +82,9 @@ class molecule
     ~molecule(){};//Destructor
 
     void add_neucleus(double charge, double x, double y, double z);
-    void calc_bond_lengths();
-    void calc_bond_angles();
-    void calc_outofplane_angle();
+    void calc_bond_lengths(bool print = PRINT);
+    void calc_bond_angles(bool print = PRINT);
+    void calc_outofplane_angle(bool print = PRINT);
     
 
     friend std::ostream& operator <<(std::ostream & os, molecule & mol);

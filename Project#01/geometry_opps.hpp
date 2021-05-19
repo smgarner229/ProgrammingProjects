@@ -15,44 +15,74 @@ struct unit_vector
 {
     double x_dir, y_dir, z_dir;
     
+    // Default constructor
+    unit_vector(){};
+
     // Constructor for using two particles
-    unit_vector(const particle A, const particle B)
+    unit_vector(const particle A, const particle B, double magnitude)
     {
-        double magnitue = calc_distances(A,B);
-        x_dir=-1.0*(B.x-A.x)/magnitue;
-        y_dir=-1.0*(B.y-A.y)/magnitue;
-        z_dir=-1.0*(B.z-A.z)/magnitue;
+        x_dir=(A.x-B.x)/magnitude;
+        y_dir=(A.y-B.y)/magnitude;
+        z_dir=(A.z-B.z)/magnitude;
     };
 
-    // Constructor which takes the dot prodcut.  
-    // Probably bad practice to not have this explicity in the function call name
-    unit_vector(const unit_vector &ei, const unit_vector & ej)
-    {
-        x_dir=ei.y_dir*ej.z_dir-ei.z_dir*ej.y_dir;
-        y_dir=ei.z_dir*ej.x_dir-ei.x_dir*ej.z_dir;
-        z_dir=ei.x_dir*ej.y_dir-ei.y_dir*ej.x_dir;
-    };
+    // Constructor for using three directions
+    // Note this will Normalize the vector!
+    unit_vector(const double x_dir, const double y_dir, const double z_dir):
+    x_dir(x_dir), y_dir(y_dir), z_dir(z_dir) {};
+
+    // Default destructor
+    ~unit_vector(){};
+
 };
 
-double dot_product(const unit_vector & ei, const unit_vector & ej)
+struct vector
+{
+    struct unit_vector direction;
+    double magnitude;
+
+    // Constructor between two points
+    vector(const particle & A, const particle & B)
+    {
+        magnitude = calc_distances(A,B);
+        direction = unit_vector(A,B,magnitude);
+    };
+
+    // Constructor utilizing known magnitude and direction
+    vector(const double magnitude, const unit_vector & direction):
+    direction(direction),magnitude(magnitude) {};
+};
+
+double unit_dot_product(const unit_vector & ei, const unit_vector & ej)
 {
     return ei.x_dir * ej.x_dir + ei.y_dir * ej.y_dir + ei.z_dir * ej.z_dir;
 }
 
-unit_vector cross_prodcut(const unit_vector & ei, const unit_vector & ej)
+double vector_dot_product(const vector & ei, const vector & ej)
 {
-    return unit_vector(ei,ej);
+    return ei.magnitude * ej.magnitude * unit_dot_product(ei.direction,ej.direction);
 }
 
-
-double calc_angle(const particle & B, const particle & A, const particle & C)
+unit_vector unit_cross_product(const unit_vector & ei, const unit_vector & ej)
 {
-    return std::acos(dot_product(unit_vector(A,B), unit_vector(C,B)))*180./M_PI;
+    return unit_vector(ei.y_dir * ej.z_dir - ei.z_dir * ej.y_dir,
+                       ei.z_dir * ej.x_dir - ei.x_dir * ej.z_dir,
+                       ei.x_dir * ej.y_dir - ei.y_dir * ej.x_dir );
 }
 
-double calc_out_of_plane_angle(const particle & i, const particle & j, const particle & k, const particle & l)
+vector vector_cross_product(const vector & ei, const vector & ej)
 {
-    return std::asin(dot_product(cross_prodcut(unit_vector(j,k),unit_vector(l,k)),unit_vector(i,k))/(std::sin(std::acos(calc_angle(j,k,l)))))*180./M_PI;
+    return vector(ei.magnitude * ej.magnitude, unit_cross_product(ei.direction,ej.direction));
 }
+
+double calc_angle(const particle & A, const particle & B, const particle & C)
+{
+    return std::acos(unit_dot_product(vector(A,B).direction,vector(C,B).direction)) * 180./M_PI;
+}
+
+//double calc_out_of_plane_angle(const particle & i, const particle & j, const particle & k, const particle & l)
+//{
+//    return std::asin(dot_product(cross_prodcut(unit_vector(j,k),unit_vector(l,k)),unit_vector(i,k))/(std::sin(std::acos(calc_angle(j,k,l)))))*180./M_PI;
+//}
 
 #endif

@@ -1,3 +1,5 @@
+
+
 #include "molecule.hpp"
 #include "geometry_opps.hpp"
 
@@ -18,7 +20,7 @@
         return os;
     }
 
-    void molecule::calc_bond_lengths()
+    void molecule::calc_bond_lengths(bool print)
     {
         for(size_t i = 0; i < nuclei.size(); i++)
         {
@@ -27,14 +29,18 @@
                 bonds.push_back(bond(i,j,calc_distances(nuclei[i],nuclei[j])));
             }
         }
-        for(size_t i = 0; i < bonds.size(); i++)
+        if(print)
         {
-            std::cout << bonds[i].to << " " << bonds[i].from << " " << bonds[i].dist << std::endl;
+            std::cout << "\nBond Distances:\n";
+            for(size_t i = 0; i < bonds.size(); i++)
+            {
+                std::cout << bonds[i].to << " " << bonds[i].from << " " << bonds[i].dist << std::endl;
+            }
         }
         return;
     }
 
-    void molecule::calc_bond_angles()
+    void molecule::calc_bond_angles(bool print)
     {
         for(size_t i = 0; i < nuclei.size(); i++)
         {
@@ -44,19 +50,23 @@
                 {
                     if(calc_distances(nuclei[i],nuclei[j])<4.0 && calc_distances(nuclei[j],nuclei[k])<4.0)
                     {
-                        internal_angles.push_back(internal_angle(j,i,k,calc_angle(nuclei[j],nuclei[i],nuclei[k])));
+                        internal_angles.push_back(internal_angle(i,j,k,calc_angle(nuclei[i],nuclei[j],nuclei[k])));
                     }
                 }
             }
         }
-        for(size_t i=0; i < internal_angles.size(); i++)
+        if (print)
         {
-            std::cout << internal_angles[i].central << " " << internal_angles[i].to << 
-            " " << internal_angles[i].from << " " << internal_angles[i].angle << std::endl;
+            std::cout << "\nBond Angles:\n";
+            for(size_t i=0; i < internal_angles.size(); i++)
+            {
+                std::cout << internal_angles[i].central << " " << internal_angles[i].to << 
+                " " << internal_angles[i].from << " " << internal_angles[i].angle << std::endl;
+            }
         }
     }
-
-    void molecule::calc_outofplane_angle()
+/*
+    void molecule::calc_outofplane_angle(bool print)
     {
         for(size_t i = 0; i < nuclei.size(); i++)
         {
@@ -69,6 +79,7 @@
                         if(calc_distances(nuclei[i],nuclei[k]) < 4.0 && calc_distances(nuclei[k],nuclei[j]) < 4.0 && calc_distances(nuclei[k],nuclei[l]))
                         {
                             outofplane_angles.push_back(outofplane_angle(i,j,k,l,calc_out_of_plane_angle(nuclei[i],nuclei[j],nuclei[k],nuclei[l])));
+                            if(print)
                             std::cout << i << " " << j << " " << k << " " << l << " " << outofplane_angles.at(outofplane_angles.size()-1).angle << std::endl;
                         }
                     }
@@ -76,3 +87,4 @@
             }
         }
     }
+*/
