@@ -12,7 +12,7 @@ int main(int argc, char** argv)
     std::cout << mastermol;
     mastermol.calc_bond_lengths();
     mastermol.calc_bond_angles();
-    //mastermol.calc_outofplane_angle();
+    mastermol.calc_outofplane_angle();
 
     return 0;
 }

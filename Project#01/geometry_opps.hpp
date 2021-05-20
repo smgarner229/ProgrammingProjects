@@ -2,7 +2,6 @@
 #define GEOMETRY_OPP_HPP
 
 #include <cmath>
-#include <vector>
 
 #include "molecule.hpp"
 
@@ -19,6 +18,7 @@ struct unit_vector
     unit_vector(){};
 
     // Constructor for using two particles
+    // Note the convention is the vector pointing from B toward A
     unit_vector(const particle A, const particle B, double magnitude)
     {
         x_dir=(A.x-B.x)/magnitude;
@@ -27,7 +27,7 @@ struct unit_vector
     };
 
     // Constructor for using three directions
-    // Note this will Normalize the vector!
+    // Note this will NOT Normalize the vector!
     unit_vector(const double x_dir, const double y_dir, const double z_dir):
     x_dir(x_dir), y_dir(y_dir), z_dir(z_dir) {};
 
@@ -80,9 +80,11 @@ double calc_angle(const particle & A, const particle & B, const particle & C)
     return std::acos(unit_dot_product(vector(A,B).direction,vector(C,B).direction)) * 180./M_PI;
 }
 
-//double calc_out_of_plane_angle(const particle & i, const particle & j, const particle & k, const particle & l)
-//{
-//    return std::asin(dot_product(cross_prodcut(unit_vector(j,k),unit_vector(l,k)),unit_vector(i,k))/(std::sin(std::acos(calc_angle(j,k,l)))))*180./M_PI;
-//}
+double calc_out_of_plane_angle(const particle & A, const particle & B, const particle & C, const particle & D)
+{
+    return std::asin(
+    unit_dot_product(unit_vector(unit_cross_product(vector(B,C).direction,vector(D,C).direction)),vector(A,C).direction)
+                    /(std::sin(calc_angle(B,C,D)*M_PI/180.)))*180./M_PI;
+}
 
 #endif

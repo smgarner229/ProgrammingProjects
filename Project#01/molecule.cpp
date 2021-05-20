@@ -1,5 +1,3 @@
-
-
 #include "molecule.hpp"
 #include "geometry_opps.hpp"
 
@@ -65,26 +63,28 @@
             }
         }
     }
-/*
+
     void molecule::calc_outofplane_angle(bool print)
     {
         for(size_t i = 0; i < nuclei.size(); i++)
         {
-            for(size_t j = i+1; j < nuclei.size(); j++)
+            for(size_t j = 0; j < nuclei.size(); j++)
             {
-                for(size_t k = j+1; k < nuclei.size(); k++)
+                for(size_t k = 0; k < nuclei.size(); k++)
                 {
-                    for(size_t l = k+1; l < nuclei.size(); l++)
+                    for(size_t l = 0; l < j; l++)
                     {
-                        if(calc_distances(nuclei[i],nuclei[k]) < 4.0 && calc_distances(nuclei[k],nuclei[j]) < 4.0 && calc_distances(nuclei[k],nuclei[l]))
+                        if(calc_distances(nuclei[i],nuclei[k]) < 4.0 && calc_distances(nuclei[k],nuclei[j]) < 4.0 && calc_distances(nuclei[k],nuclei[l]) < 4.0
+                            && i != j && j != k && k != l && i != k && i != l)
                         {
                             outofplane_angles.push_back(outofplane_angle(i,j,k,l,calc_out_of_plane_angle(nuclei[i],nuclei[j],nuclei[k],nuclei[l])));
                             if(print)
-                            std::cout << i << " " << j << " " << k << " " << l << " " << outofplane_angles.at(outofplane_angles.size()-1).angle << std::endl;
+                            {
+                                std::cout << i << " " << j << " " << k << " " << l << " " << outofplane_angles.at(outofplane_angles.size()-1).angle << std::endl;
+                            }
                         }
                     }
                 }
             }
         }
     }
-*/

@@ -8,8 +8,6 @@
 #include <vector>
 #include <iostream>
 
-#define MAXSTRING 80
-
 class particle
 {
     public:
