@@ -83,6 +83,7 @@ class molecule
     void calc_bond_lengths(bool print = PRINT);
     void calc_bond_angles(bool print = PRINT);
     void calc_outofplane_angle(bool print = PRINT);
+    void calc_torsion_angle(bool print = PRINT);
     
 
     friend std::ostream& operator <<(std::ostream & os, molecule & mol);

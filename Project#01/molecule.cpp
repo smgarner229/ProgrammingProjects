@@ -88,3 +88,28 @@
             }
         }
     }
+
+
+    void molecule::calc_torsion_angle(bool print)
+    {
+        for(size_t i = 0; i < nuclei.size(); i++)
+        {
+            for(size_t j = 0; j < i; j++)
+            {
+                for(size_t k = 0; k < j; k++)
+                {
+                    for(size_t l = 0; l < k; l++)
+                    {
+                        if(calc_distances(nuclei[i],nuclei[j]) < 4.0 && calc_distances(nuclei[j],nuclei[k]) < 4.0 && calc_distances(nuclei[k],nuclei[l]) < 4.0)
+                        {
+                            torsion_angles.push_back(torsion_angle(i,j,k,l,calc_torsional_angle(nuclei[i],nuclei[j],nuclei[k],nuclei[l])));
+                            if(print)
+                            {
+                                std::cout << i << " " << j << " " << k << " " << l << " " << torsion_angles.at(torsion_angles.size()-1).angle << std::endl;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }

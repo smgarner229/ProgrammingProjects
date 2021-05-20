@@ -13,6 +13,7 @@ int main(int argc, char** argv)
     mastermol.calc_bond_lengths();
     mastermol.calc_bond_angles();
     mastermol.calc_outofplane_angle();
+    mastermol.calc_torsion_angle();
 
     return 0;
 }

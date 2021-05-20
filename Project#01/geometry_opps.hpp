@@ -5,6 +5,32 @@
 
 #include "molecule.hpp"
 
+double safe_acos(const double arg)
+{
+    if (arg > 1.0)
+    {
+        return std::acos(1.0);
+    }
+    else if (arg < -1.0)
+    {
+        return std::acos(-1.0);
+    }
+    return std::acos(arg);
+}
+
+double safe_asin(const double arg)
+{
+    if (arg > 1.0)
+    {
+        return std::asin(1.0);
+    }
+    else if (arg < -1.0)
+    {
+        return std::asin(-1.0);
+    }
+    return std::asin(arg);
+}
+
 double calc_distances(const particle A, const particle B)
 {
     return std::sqrt(std::pow(A.x-B.x,2.)+std::pow(A.y-B.y,2.)+std::pow(A.z-B.z,2.));
@@ -83,14 +109,22 @@ vector vector_cross_product(const vector & ei, const vector & ej)
 
 double calc_angle(const particle & A, const particle & B, const particle & C)
 {
-    return std::acos(unit_dot_product(vector(A,B).direction,vector(C,B).direction)) * 180./M_PI;
+    return safe_acos(unit_dot_product(vector(A,B).direction,vector(C,B).direction)) * 180./M_PI;
 }
 
 double calc_out_of_plane_angle(const particle & A, const particle & B, const particle & C, const particle & D)
 {
-    return std::asin(
+    return safe_asin(
     unit_dot_product(unit_vector(unit_cross_product(vector(B,C).direction,vector(D,C).direction)),vector(A,C).direction)
                     /(std::sin(calc_angle(B,C,D)*M_PI/180.)))*180./M_PI;
+}
+
+double calc_torsional_angle(const particle & A, const particle & B, const particle & C, const particle & D)
+{
+    return safe_acos(unit_dot_product(
+        unit_cross_product(vector(B,A).direction,vector(C,B).direction),
+        unit_cross_product(vector(C,B).direction,vector(D,C).direction)
+    )/(std::sin(calc_angle(A,B,C)*M_PI/180.)*std::sin(calc_angle(B,C,D)*M_PI/180.)))*180./M_PI;
 }
 
 #endif
