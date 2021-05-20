@@ -51,6 +51,12 @@ struct vector
     // Constructor utilizing known magnitude and direction
     vector(const double magnitude, const unit_vector & direction):
     direction(direction),magnitude(magnitude) {};
+
+    // Default constructor
+    vector(){};
+
+    // Default destructor
+    ~vector(){};
 };
 
 double unit_dot_product(const unit_vector & ei, const unit_vector & ej)
