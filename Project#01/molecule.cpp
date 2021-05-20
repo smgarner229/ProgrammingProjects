@@ -113,3 +113,44 @@
             }
         }
     }
+
+    void molecule::calc_center_of_mass()
+    {
+        for(size_t i = 0; i < nuclei.size(); i++)
+        {
+            total_mass += nuclei[i].mass;
+            com.x += nuclei[i].mass*nuclei[i].x;
+            com.y += nuclei[i].mass*nuclei[i].y;
+            com.z += nuclei[i].mass*nuclei[i].z;
+        }
+        com.x /= total_mass;
+        com.y /= total_mass;
+        com.z /= total_mass;
+        std::cout << "\nCOM:\n";
+        std::cout << com.x << "\t" << com.y << "\t" << com.z << std::endl;
+    }
+/*
+    void molecule::calc_inertial_tensor()
+    {
+        for(size_t i = 0; i < nuclei.size(); i++)
+        {
+            inertial_tensor[0][0] += nuclei[i].mass * (std::pow(nuclei[i].y,2.)+std::pow(nuclei[i].z,2.));
+            inertial_tensor[1][1] += nuclei[i].mass * (std::pow(nuclei[i].x,2.)+std::pow(nuclei[i].z,2.));
+            inertial_tensor[2][2] += nuclei[i].mass * (std::pow(nuclei[i].x,2.)+std::pow(nuclei[i].y,2.));
+            inertial_tensor[0][1] += nuclei[i].mass * nuclei[i].x * nuclei[i].y;
+            inertial_tensor[1][0] += inertial_tensor[0][1];
+            inertial_tensor[2][0] += nuclei[i].mass * nuclei[i].x * nuclei[i].z;
+            inertial_tensor[0][2] += inertial_tensor[2][0];
+            inertial_tensor[1][2] += nuclei[i].mass * nuclei[i].y * nuclei[i].z;
+            inertial_tensor[2][1] += inertial_tensor[1][2];
+        }
+        for(size_t i = 0; i < 3; i++)
+        {
+            std::cout << std::endl;
+            for(size_t j = 0; j < 3; j++)
+            {
+                std::cout << inertial_tensor[i][j] << "\t";
+            }
+        }
+    }
+*/

@@ -6,17 +6,34 @@
 #endif 
 
 #include <vector>
+#include <map>
 #include <iostream>
 
-class particle
+extern "C" {
+    extern int dgeev_(char*,char*,int*,double*,int*,double*, double*, double*, int*, double*, int*, double*, int*, int*);
+}
+
+const std::map <int,double> mass_map {{1,1.00797},{2,4.00260},{3,6.941},{4,9.01218},{5,10.81},{6,12.011},{7,14.0067},{8,15.9994},
+                                      {9,18.9984403},{10,20.179}};
+
+class point{
+    public:
+        double x,y,z;
+    point(double x, double y, double z): x(x), y(y), z(z) {};
+    point(){};
+    ~point(){};
+};                              
+
+class particle : public point
 {
     public:
 
-    double charge;
-    double x,y,z;
+    int charge;
+    
+    double mass;
 
     particle(){};
-    particle(double charge, double x, double y, double z) : charge(charge),x(x),y(y),z(z) {};
+    particle(int charge, double x, double y, double z) : point(x,y,z), charge(charge) {mass=mass_map.find(charge)->second;};
     ~particle(){};
 
     void print_ptcl()
@@ -76,6 +93,10 @@ class molecule
     std::vector<outofplane_angle> outofplane_angles;
     std::vector<torsion_angle> torsion_angles;
 
+    double total_mass;
+    point com;
+    //double inertial_tensor[3][3];
+
     molecule(){}; //Constructor
     ~molecule(){};//Destructor
 
@@ -84,6 +105,9 @@ class molecule
     void calc_bond_angles(bool print = PRINT);
     void calc_outofplane_angle(bool print = PRINT);
     void calc_torsion_angle(bool print = PRINT);
+
+    void calc_center_of_mass();
+    //void calc_inertial_tensor();
     
 
     friend std::ostream& operator <<(std::ostream & os, molecule & mol);

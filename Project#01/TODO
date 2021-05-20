@@ -2,6 +2,7 @@ TODOS:
 
 -> Make a consistent naming scheme for struct type, storage type, and operation type of angles
 -> Separate print to make cleaner (potentially move macro to cpp?)
+-> Cleanup Print statements to make output more clean
 -> Make helper functions to loop over atoms for calculations
     -> Pseudocode:
         call_loop_structure(molecule_to_loop_through,function_to_apply,location_to_store_data)
