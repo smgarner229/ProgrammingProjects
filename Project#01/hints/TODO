@@ -1,4 +1,0 @@
-TODOS:
-
--> Fix Angle calculation to make more consistent (ie angle ABC should be the angle between atoms B & C via A)
--> Breakout out of plane angle into individual steps, find source of NaN's
