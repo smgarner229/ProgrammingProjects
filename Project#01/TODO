@@ -6,4 +6,10 @@ TODOS:
 -> Make helper functions to loop over atoms for calculations
     -> Pseudocode:
         call_loop_structure(molecule_to_loop_through,function_to_apply,location_to_store_data)
+-> Decide on storing distances versus calculating on the fly?
+-> Pretty input / output
+-> Turn main function into driver which calls some "Geometry Analysis" routine
+-> Optimize makefile, potentially switch to cmake?
+-> Do the final unit conversions
+-> Sort & Store the resulting elements of diagonalizing the inerial tensor
 
