@@ -9,8 +9,11 @@
 #include <map>
 #include <iostream>
 
+#define NDIM 3
+
 extern "C" {
     extern int dgeev_(char*,char*,int*,double*,int*,double*, double*, double*, int*, double*, int*, double*, int*, int*);
+    extern int dsyev_(char*,char*,int*,double*,int*,double*,double*,int*,int*);
 }
 
 const std::map <int,double> mass_map {{1,1.00797},{2,4.00260},{3,6.941},{4,9.01218},{5,10.81},{6,12.011},{7,14.0067},{8,15.9994},
@@ -22,6 +25,8 @@ class point{
     point(double x, double y, double z): x(x), y(y), z(z) {};
     point(){};
     ~point(){};
+
+    void translate(double deltax, double deltay, double deltaz);
 };                              
 
 class particle : public point
@@ -95,9 +100,9 @@ class molecule
 
     double total_mass;
     point com;
-    //double inertial_tensor[3][3];
+    double * inertial_tensor = nullptr;
 
-    molecule(){}; //Constructor
+    molecule(); //Constructor
     ~molecule(){};//Destructor
 
     void add_neucleus(double charge, double x, double y, double z);
@@ -107,7 +112,7 @@ class molecule
     void calc_torsion_angle(bool print = PRINT);
 
     void calc_center_of_mass();
-    //void calc_inertial_tensor();
+    void calc_inertial_tensor();
     
 
     friend std::ostream& operator <<(std::ostream & os, molecule & mol);

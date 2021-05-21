@@ -1,6 +1,26 @@
 #include "molecule.hpp"
 #include "geometry_opps.hpp"
 
+    void point::translate(double deltax, double deltay, double deltaz)
+    {
+        x+=deltax;
+        y+=deltay;
+        z+=deltaz;
+    }
+
+    // Constructor which initializes the inertial tensor to be all zeros
+    molecule::molecule()
+    {
+        inertial_tensor = new double[9];
+        for (size_t i = 0; i < 3; i++)
+        {
+            for (size_t j = 0; j < 3; j++)
+            {
+                inertial_tensor[i*3 +j] = 0.0;
+            }
+        }
+    };
+
     void molecule::add_neucleus(double charge, double x, double y, double z)
     {   
         nuclei.push_back(particle(charge,x,y,z));
@@ -128,29 +148,62 @@
         com.z /= total_mass;
         std::cout << "\nCOM:\n";
         std::cout << com.x << "\t" << com.y << "\t" << com.z << std::endl;
+        for(size_t i = 0; i < nuclei.size(); i++)
+        {
+            nuclei[i].translate(-com.x,-com.y,-com.z);
+        }
     }
-/*
+
     void molecule::calc_inertial_tensor()
     {
         for(size_t i = 0; i < nuclei.size(); i++)
         {
-            inertial_tensor[0][0] += nuclei[i].mass * (std::pow(nuclei[i].y,2.)+std::pow(nuclei[i].z,2.));
-            inertial_tensor[1][1] += nuclei[i].mass * (std::pow(nuclei[i].x,2.)+std::pow(nuclei[i].z,2.));
-            inertial_tensor[2][2] += nuclei[i].mass * (std::pow(nuclei[i].x,2.)+std::pow(nuclei[i].y,2.));
-            inertial_tensor[0][1] += nuclei[i].mass * nuclei[i].x * nuclei[i].y;
-            inertial_tensor[1][0] += inertial_tensor[0][1];
-            inertial_tensor[2][0] += nuclei[i].mass * nuclei[i].x * nuclei[i].z;
-            inertial_tensor[0][2] += inertial_tensor[2][0];
-            inertial_tensor[1][2] += nuclei[i].mass * nuclei[i].y * nuclei[i].z;
-            inertial_tensor[2][1] += inertial_tensor[1][2];
+            inertial_tensor[0] += nuclei[i].mass * (std::pow(nuclei[i].y,2.)+std::pow(nuclei[i].z,2.));
+            inertial_tensor[4] += nuclei[i].mass * (std::pow(nuclei[i].x,2.)+std::pow(nuclei[i].z,2.));
+            inertial_tensor[8] += nuclei[i].mass * (std::pow(nuclei[i].x,2.)+std::pow(nuclei[i].y,2.));
+
+            inertial_tensor[1] += nuclei[i].mass * nuclei[i].x * nuclei[i].y;
+            inertial_tensor[2] += nuclei[i].mass * nuclei[i].x * nuclei[i].z;
+            inertial_tensor[5] += nuclei[i].mass * nuclei[i].y * nuclei[i].z;
         }
-        for(size_t i = 0; i < 3; i++)
+        inertial_tensor[3] = inertial_tensor[1];
+        inertial_tensor[6] = inertial_tensor[2];
+        inertial_tensor[7] = inertial_tensor[5];
+        std::cout << "\n";
+        for ( size_t i = 0; i < 9; i++)
         {
-            std::cout << std::endl;
-            for(size_t j = 0; j < 3; j++)
+            if (i%3 == 0)
             {
-                std::cout << inertial_tensor[i][j] << "\t";
-            }
+                std::cout << "\n";
+            }   
+            std::cout << inertial_tensor[i] << '\t';
         }
+        std::cout << "\n";
+
+        int n = 3;
+        char Nchar='N';
+        double *eigReal=new double[n];
+        double *eigImag=new double[n];
+        int one=1;
+        int lwork=6*n;
+        double *work=new double[lwork];
+        int info;
+
+        dgeev_(&Nchar,&Nchar,&n,inertial_tensor,&n,eigReal,eigImag,nullptr,&one,nullptr,&one,work,&lwork,&info); 
+
+        delete eigReal;
+        delete eigImag;
+        delete work;
+
+        std::cout << "Info is: " << info << std::endl;
+                std::cout << "\n";
+        for ( size_t i = 0; i < 9; i++)
+        {
+            if (i%3 == 0)
+            {
+                std::cout << "\n";
+            }   
+            std::cout << inertial_tensor[i] << '\t';
+        }
+        std::cout << "\n";
     }
-*/

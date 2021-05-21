@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     mastermol.calc_outofplane_angle();
     mastermol.calc_torsion_angle();
     mastermol.calc_center_of_mass();
-    //mastermol.calc_inertial_tensor();
+    mastermol.calc_inertial_tensor();
 
     return 0;
 }
