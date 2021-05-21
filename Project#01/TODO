@@ -12,4 +12,5 @@ TODOS:
 -> Optimize makefile, potentially switch to cmake?
 -> Do the final unit conversions
 -> Sort & Store the resulting elements of diagonalizing the inerial tensor
-
+-> Make matrix diagonalizing take only the upper diagonal (ie move from dgeev to dsyev)
+-> Breakout molecule, particle, point into separate class files

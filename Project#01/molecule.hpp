@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <iomanip>
 
 #define NDIM 3
 
@@ -27,6 +28,7 @@ class point{
     ~point(){};
 
     void translate(double deltax, double deltay, double deltaz);
+    friend std::ostream & operator << (std::ostream & os, point & pt);
 };                              
 
 class particle : public point
@@ -41,11 +43,7 @@ class particle : public point
     particle(int charge, double x, double y, double z) : point(x,y,z), charge(charge) {mass=mass_map.find(charge)->second;};
     ~particle(){};
 
-    void print_ptcl()
-    {
-        std::cout << charge << "\t\t" << x << "\t\t" << y << "\t\t" << z << std::endl;
-        return;
-    };
+    friend std::ostream & operator << (std::ostream & os, particle & ptcl);
 };
 
 class molecule
@@ -103,7 +101,7 @@ class molecule
     double * inertial_tensor = nullptr;
 
     molecule(); //Constructor
-    ~molecule(){};//Destructor
+    ~molecule();//Destructor
 
     void add_neucleus(double charge, double x, double y, double z);
     void calc_bond_lengths(bool print = PRINT);

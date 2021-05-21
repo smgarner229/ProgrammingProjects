@@ -1,6 +1,29 @@
 #include "molecule.hpp"
 #include "geometry_opps.hpp"
 
+#define FIELDWIDTH 10
+
+    // Friend class to print a point's coordinates
+    std::ostream & operator <<(std::ostream & os, point & pt)
+    {   
+        os << std::fixed <<
+              std::setw(FIELDWIDTH) << std::setprecision(5) << pt.x << 
+              std::setw(FIELDWIDTH) << std::setprecision(5) << pt.y << 
+              std::setw(FIELDWIDTH) << std::setprecision(5) << pt.z;
+        return os;
+    }
+
+    // Friend class to print a particle.
+    std::ostream & operator <<(std::ostream & os, particle & ptcl)
+    {
+        point temp(ptcl.x,ptcl.y,ptcl.z);
+        os << std::setw(FIELDWIDTH) << std::setprecision(3) << ptcl.charge <<
+              std::setw(FIELDWIDTH) << std::setprecision(4) << ptcl.mass   <<
+              temp;
+        return os;
+    }
+
+    // Translate a single particle by some distance
     void point::translate(double deltax, double deltay, double deltaz)
     {
         x+=deltax;
@@ -12,28 +35,37 @@
     molecule::molecule()
     {
         inertial_tensor = new double[9];
-        for (size_t i = 0; i < 3; i++)
-        {
-            for (size_t j = 0; j < 3; j++)
-            {
+        for (size_t i = 0; i < 3; i++){
+            for (size_t j = 0; j < 3; j++){
                 inertial_tensor[i*3 +j] = 0.0;
             }
         }
-    };
+    }
 
+    // Destructor.  Clear memory allocated in the initializer
+    molecule::~molecule()
+    {
+        delete inertial_tensor;
+    }
+
+    // Add a nucleus to the molecule.  
+    // Mass is added via the particle constructor
     void molecule::add_neucleus(double charge, double x, double y, double z)
     {   
         nuclei.push_back(particle(charge,x,y,z));
         return;
     }
 
+    // Friend class to print a molecule's geometry
     std::ostream& operator <<(std::ostream & os, molecule & mol)
     {
-        os << "Charge\t\tx\t\ty\t\tz\n";
+        os << std::setw(FIELDWIDTH) << "Charge" 
+           << std::setw(FIELDWIDTH) << "Mass"  
+           << std::setw(FIELDWIDTH) << "x"
+           << std::setw(FIELDWIDTH) << "y"
+           << std::setw(FIELDWIDTH) << "z" << std::endl;
         for (size_t i = 0; i < mol.nuclei.size(); i++)
-        {
-            mol.nuclei[i].print_ptcl();
-        }
+            os << mol.nuclei[i] << std::endl;
         os << "\n";
         return os;
     }
