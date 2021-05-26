@@ -5,7 +5,14 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <cmath>
 #include "molecule.hpp"
+
+static void file_open_error(char * file_name)
+{
+    std::cout << "Cannot open file: " << file_name << "\nExitting now!\n";
+    exit(1);
+}
 
 void parse_geom(char* infile_name, molecule & mol)
 {
@@ -42,9 +49,34 @@ void parse_geom(char* infile_name, molecule & mol)
     }
     else
     {
-        std::cout << "Error opening file: " << infile_name <<"\nExiting now\n";
-        exit(1);
+        file_open_error(infile_name);
     }
+    return;
+}
+
+void parse_hessian(char * infile_name, molecule & mol)
+{
+    int read_natoms;
+    int counter = 0;
+    std::ifstream infile(infile_name);
+
+    if (infile) // File opened successfully
+    {
+        infile >> read_natoms;
+        int total_size = (int)std::pow(3*read_natoms,2.0);
+        mol.hessian = new double[total_size];
+        while(counter < total_size)
+        {
+            infile >> mol.hessian[counter];
+            std::cout << mol.hessian[counter] << std::endl;
+            counter++;
+        }
+    }
+    else
+    {
+        file_open_error(infile_name);
+    }
+
     return;
 }
 

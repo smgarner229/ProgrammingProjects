@@ -9,6 +9,7 @@
 #include <map>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
 #define NDIM 3
 
@@ -99,6 +100,7 @@ class molecule
     double total_mass;
     point com;
     double * inertial_tensor = nullptr;
+    double * hessian = nullptr;
 
     molecule(); //Constructor
     ~molecule();//Destructor
@@ -111,6 +113,8 @@ class molecule
 
     void calc_center_of_mass();
     void calc_inertial_tensor();
+
+    void vibrational_analysis();
     
 
     friend std::ostream& operator <<(std::ostream & os, molecule & mol);

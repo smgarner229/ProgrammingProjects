@@ -34,18 +34,14 @@
     // Constructor which initializes the inertial tensor to be all zeros
     molecule::molecule()
     {
-        inertial_tensor = new double[9];
-        for (size_t i = 0; i < 3; i++){
-            for (size_t j = 0; j < 3; j++){
-                inertial_tensor[i*3 +j] = 0.0;
-            }
-        }
+
     }
 
     // Destructor.  Clear memory allocated in the initializer
     molecule::~molecule()
     {
         delete inertial_tensor;
+        delete hessian;
     }
 
     // Add a nucleus to the molecule.  
@@ -188,6 +184,8 @@
 
     void molecule::calc_inertial_tensor()
     {
+
+        inertial_tensor = new double[9] {0.0};
         for(size_t i = 0; i < nuclei.size(); i++)
         {
             inertial_tensor[0] += nuclei[i].mass * (std::pow(nuclei[i].y,2.)+std::pow(nuclei[i].z,2.));
@@ -201,16 +199,6 @@
         inertial_tensor[3] = inertial_tensor[1];
         inertial_tensor[6] = inertial_tensor[2];
         inertial_tensor[7] = inertial_tensor[5];
-        std::cout << "\n";
-        for ( size_t i = 0; i < 9; i++)
-        {
-            if (i%3 == 0)
-            {
-                std::cout << "\n";
-            }   
-            std::cout << inertial_tensor[i] << '\t';
-        }
-        std::cout << "\n";
 
         int n = 3;
         char Nchar='N';
@@ -223,19 +211,51 @@
 
         dgeev_(&Nchar,&Nchar,&n,inertial_tensor,&n,eigReal,eigImag,nullptr,&one,nullptr,&one,work,&lwork,&info); 
 
+        std::cout << "Eigenvalues of Inertial Tensor:\n";
+        for (size_t i = 0; i < n; i++)
+        {
+            std::cout << eigReal[i] << " + " << eigImag[i] << " i\n";
+        }
+
         delete eigReal;
         delete eigImag;
         delete work;
 
-        std::cout << "Info is: " << info << std::endl;
-                std::cout << "\n";
-        for ( size_t i = 0; i < 9; i++)
+    }
+
+    void molecule::vibrational_analysis()
+    {
+        // Appropriately Mass Weight the read in Hessian
+        for(size_t i = 0; i < 3*nuclei.size(); i++)
         {
-            if (i%3 == 0)
+            for(size_t j = 0; j < 3*nuclei.size(); j++)
             {
-                std::cout << "\n";
-            }   
-            std::cout << inertial_tensor[i] << '\t';
+                hessian[i*3*nuclei.size()+j] = hessian[i*3*nuclei.size()+j] / std::pow(nuclei[i/3].mass * nuclei[j/3].mass,0.5);
+            }
         }
-        std::cout << "\n";
+
+        // Parameters to setup the LAPACK call
+        int n = 3*nuclei.size();
+        char Nchar='N';
+        double *eigReal=new double[n];
+        double *eigImag=new double[n];
+        int one=1;
+        int lwork=6*n;
+        double *work=new double[lwork];
+        int info;
+
+        dgeev_(&Nchar,&Nchar,&n,hessian,&n,eigReal,eigImag,nullptr,&one,nullptr,&one,work,&lwork,&info); 
+
+        std::sort(eigReal,eigReal+n);
+
+        std::cout << "\n" << "Computed Eigen values of Hessian:\n";
+        
+        for (size_t i = 0; i < n; i++)
+        {
+            std::cout << eigReal[i] << " + " << eigImag[i] << " i\n";
+        }
+
+        delete eigReal;
+        delete eigImag;
+        delete work;
     }
