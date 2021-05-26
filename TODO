@@ -9,8 +9,10 @@ TODOS:
 -> Decide on storing distances versus calculating on the fly?
 -> Pretty input / output
 -> Turn main function into driver which calls some "Geometry Analysis" routine
--> Optimize makefile, potentially switch to cmake?
+-> Configure CMake to take print macro options
 -> Do the final unit conversions
--> Sort & Store the resulting elements of diagonalizing the inerial tensor
+-> Store the resulting elements of diagonalizing the inerial tensor
 -> Make matrix diagonalizing take only the upper diagonal (ie move from dgeev to dsyev)
 -> Breakout molecule, particle, point into separate class files
+-> Make more elegant for parsing how to solve the different questions (ie, make a single executable for Q1&Q2 that can be run for either or both)
+

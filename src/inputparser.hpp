@@ -67,9 +67,7 @@ void parse_hessian(char * infile_name, molecule & mol)
         mol.hessian = new double[total_size];
         while(counter < total_size)
         {
-            infile >> mol.hessian[counter];
-            std::cout << mol.hessian[counter] << std::endl;
-            counter++;
+            infile >> mol.hessian[counter++];
         }
     }
     else
