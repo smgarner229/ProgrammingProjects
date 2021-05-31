@@ -8,6 +8,7 @@ int main(int argc, char ** argv)
     hf_wfn master_wfn;
     master_wfn.sints=read_2D_ints(argv[1],master_wfn);
     master_wfn.sints=triangle_to_full_mat(master_wfn.sints,master_wfn.mat_size);
+    std::cout << std::endl << std::endl << std::endl;
     master_wfn.ke_ints=read_2D_ints(argv[2],master_wfn);
     master_wfn.eN_ints=read_2D_ints(argv[3],master_wfn);
     master_wfn.make_core_H();
