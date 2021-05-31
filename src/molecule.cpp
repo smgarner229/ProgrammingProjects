@@ -40,8 +40,8 @@
     // Destructor.  Clear memory allocated in the initializer
     molecule::~molecule()
     {
-        delete inertial_tensor;
-        delete hessian;
+        delete[] inertial_tensor;
+        delete[] hessian;
     }
 
     // Add a nucleus to the molecule.  
@@ -217,9 +217,9 @@
             std::cout << eigReal[i] << " + " << eigImag[i] << " i\n";
         }
 
-        delete eigReal;
-        delete eigImag;
-        delete work;
+        delete[] eigReal;
+        delete[] eigImag;
+        delete[] work;
 
     }
 
@@ -255,7 +255,7 @@
             std::cout << eigReal[i] << " + " << eigImag[i] << " i\n";
         }
 
-        delete eigReal;
-        delete eigImag;
-        delete work;
+        delete[] eigReal;
+        delete[] eigImag;
+        delete[] work;
     }
