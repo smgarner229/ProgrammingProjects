@@ -3,6 +3,9 @@
 
 #include <map>
 #include <utility>
+#include <iostream>
+
+double * triangle_to_full_mat(double * triangle, const int & tri_size);
 
 class two_center_integral
 {
@@ -30,7 +33,19 @@ class kinetic_integral : public two_center_integral
 
 class hf_wfn
 {
-    double enuc;
+    public:
+        size_t mat_size = -1;
+        double enuc;
+        double * sints = nullptr;
+        double * ke_ints = nullptr;
+        double * eN_ints = nullptr;
+        double * core_H = nullptr;
+    hf_wfn(){};
+    ~hf_wfn(){delete [] sints; delete [] ke_ints; delete [] eN_ints; delete [] core_H;};
+
+    void print_sints();
+    void make_core_H();
+    void orthogonalize_basis();
 };
 
 #endif

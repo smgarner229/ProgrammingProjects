@@ -15,4 +15,6 @@ TODOS:
 -> Make matrix diagonalizing take only the upper diagonal (ie move from dgeev to dsyev)
 -> Breakout molecule, particle, point into separate class files
 -> Make more elegant for parsing how to solve the different questions (ie, make a single executable for Q1&Q2 that can be run for either or both)
+-> Conversion for lower triangle to full matrix is almost working, but not quite perfect.
+    -> Best practice would be to just stick with using the lower triangle, but for getting it working I'm going to stick with what I know
 

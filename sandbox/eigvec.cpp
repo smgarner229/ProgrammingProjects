@@ -58,13 +58,13 @@ int main(int argc, char ** argv)
     print_mat(store_solution);
 
 
-    delete work;
-    delete eigReal;
-    delete eigImag;
-    delete righttrans;
-    delete righteigVec;
-    delete matrix;
-    delete store_solution;
+    delete[] work;
+    delete[] eigReal;
+    delete[] eigImag;
+    delete[] righttrans;
+    delete[] righteigVec;
+    delete[] matrix;
+    delete[] store_solution;
 
     return 0;
 }
