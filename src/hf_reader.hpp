@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 #include "hf_wfn.hpp"
 
@@ -42,12 +43,17 @@ int get_mat_size(const char * infile_name)
 
 double * read_2D_ints(const char * infile_name, hf_wfn & wfn)
 {
-    double * store_type;
+    double * store_type = NULL;
     if (wfn.mat_size == -1)
     {
         wfn.mat_size = get_mat_size(infile_name);
     }
+    std::cout << "\n\nAllocating new memory to store stuff?\n\n";
+    std::cout << "Mat size: " << wfn.mat_size;
+    std::cout << "\n\n";
     store_type = new double[wfn.mat_size];
+    std::cout << "\n\nAllocation made\n\n";
+
     size_t index = 0;
     std::ifstream open_file = file_opener(infile_name);
     int temp;
@@ -62,5 +68,47 @@ double * read_2D_ints(const char * infile_name, hf_wfn & wfn)
     {
         std::cout << store_type[j] << std::endl;
     }
-    return store_type;
+
+    // At this point, we're stored into a 1D array for the lower triangle.
+    // In the future just use this, but for now let's use the larger 2D
+    // Full version since these matrices are small enough
+    if(false){
+    double * full_mat = NULL;
+    int full_size = (-1+std::pow(1+8*wfn.mat_size,0.5))/2;
+
+    full_mat = new double[full_size*full_size];
+    size_t counteri=0,counterj=0;
+
+    for(size_t i = 0; i < wfn.mat_size; i++)
+    {
+        std::cout << "i is\t" << i << std::endl;
+        if (counteri == counterj)
+        {
+            full_mat[counteri*full_size+counterj]=store_type[i];
+            std::cout << "SpotD: " << counteri*full_size + counterj << "\t" << counterj*full_size + counteri << "\n";
+            counteri++;
+            counterj=0;
+        }
+        else
+        {
+            std::cout << "Spot: " << counteri*full_size + counterj << "\t" << counterj*full_size + counteri << "\n";
+            full_mat[counteri*full_size+counterj]=store_type[i];
+            full_mat[counterj*full_size+counteri]=store_type[i];
+            counterj++;
+        }
+        std::cout << counteri << "\t" << counterj << "\n"; 
+    }
+    for(size_t i = 0; i < full_size; i++)
+    {
+        std::cout << '\n';
+        for(size_t j = 0; j < full_size; j++)
+        {
+            std::cout << '\t' << full_mat[i*full_size+j];
+        }
+
+        }    
+    }
+
+    delete[] store_type;
+    //return full_mat;
 }

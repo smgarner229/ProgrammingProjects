@@ -3,9 +3,10 @@
 
 double * triangle_to_full_mat(double * triangle, const int & tri_size)
 {
-    double * full_mat;
+    double * full_mat = nullptr;
+    // Poor practice way to prevent memory leaks.  Cannot delete triangle
     int full_size = std::pow((-1+std::pow(1+8*tri_size,0.5))/2,1);
-    full_mat = new double[full_size];
+    full_mat = new double[full_size*full_size];
     size_t counteri=0,counterj=0;
 
     for(size_t i = 0; i < tri_size; i++)
@@ -32,7 +33,7 @@ double * triangle_to_full_mat(double * triangle, const int & tri_size)
             std::cout << '\t' << full_mat[i*full_size+j];
         }
     }
-    //delete [] triangle;
+    delete [] triangle;
     return full_mat;
 }
 
