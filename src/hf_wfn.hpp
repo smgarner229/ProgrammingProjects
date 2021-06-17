@@ -5,8 +5,11 @@
 #include <utility>
 #include <iostream>
 
+#include "tei_handler.hpp"
+
 void print_triangle_as_full_mat(double * & triangle, const int & tri_size);
 double * triangle_to_full_mat(double * & triangle, const int & tri_size);
+
 
 class two_center_integral
 {
@@ -41,6 +44,7 @@ class hf_wfn
         double * ke_ints = nullptr;
         double * eN_ints = nullptr;
         double * core_H = nullptr;
+        two_electron_integral_handler teis;
     hf_wfn(){};
     ~hf_wfn(){delete [] sints; delete [] ke_ints; delete [] eN_ints; delete [] core_H;};
 

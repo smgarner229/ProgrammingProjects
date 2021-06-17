@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "hf_wfn.hpp"
+#include "tei_handler.hpp"
 
 std::ifstream file_opener(const char * infile_name)
 {
@@ -111,4 +112,19 @@ void read_2D_ints(const char * infile_name, hf_wfn & wfn, double * & storage_loc
     }
     */
     //return full_mat;
+}
+
+void read_4D_ints(const char * infile_name, hf_wfn & wfn)
+{
+    std::ifstream open_file = file_opener(infile_name);
+    int i,j,k,l;
+    double tei;
+    while(true)
+    {
+        open_file >> i >> j >> k >> l >> tei;
+        if (open_file.eof()) break;
+        wfn.teis.add_tei(i,j,k,l,tei);
+    }
+
+    return;
 }

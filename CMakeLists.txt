@@ -20,4 +20,4 @@ add_executable(Solution ./src/molecule.cpp ./src/Solution.cpp)
 target_link_libraries(Solution ${LAPACK_LIBRARIES})
 
 # Add HF exeutable
-add_executable(HF ./src/hf.cpp ./src/hf_wfn.cpp)
+add_executable(HF ./src/hf.cpp ./src/hf_wfn.cpp ./src/tei_handler.cpp)
