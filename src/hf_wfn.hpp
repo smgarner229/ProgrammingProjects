@@ -5,7 +5,8 @@
 #include <utility>
 #include <iostream>
 
-double * triangle_to_full_mat(double * triangle, const int & tri_size);
+void print_triangle_as_full_mat(double * & triangle, const int & tri_size);
+double * triangle_to_full_mat(double * & triangle, const int & tri_size);
 
 class two_center_integral
 {

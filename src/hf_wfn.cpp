@@ -1,10 +1,32 @@
 #include "hf_wfn.hpp"
 #include <cmath>
+#include <iomanip>
 
-double * triangle_to_full_mat(double * triangle, const int & tri_size)
+#define FIELDWIDTH 10
+
+
+void print_triangle_as_full_mat(double * & triangle, const int & tri_size)
+{
+    double * temp = nullptr;
+    size_t full_size = std::pow((-1+std::pow(1+8*tri_size,0.5))/2,1);
+    temp=triangle_to_full_mat(triangle,tri_size);
+
+    for(size_t i = 0; i < full_size; i++)
+    {
+        std::cout << '\n';
+        for(size_t j = 0; j < full_size; j++)
+        {
+            std::cout << std::setw(FIELDWIDTH) << std::setprecision(5) << temp[i*full_size+j];
+        }
+    }
+    std::cout << "\n\n";
+    delete [] temp;
+    return;
+}
+
+double * triangle_to_full_mat(double * & triangle, const int & tri_size)
 {
     double * full_mat = nullptr;
-    // Poor practice way to prevent memory leaks.  Cannot delete triangle
     int full_size = std::pow((-1+std::pow(1+8*tri_size,0.5))/2,1);
     full_mat = new double[full_size*full_size];
     size_t counteri=0,counterj=0;
@@ -25,15 +47,17 @@ double * triangle_to_full_mat(double * triangle, const int & tri_size)
         }
     }
 
-    for(size_t i = 0; i < full_size; i++)
+    if(false)
     {
-        std::cout << '\n';
-        for(size_t j = 0; j < full_size; j++)
+        for(size_t i = 0; i < full_size; i++)
         {
-            std::cout << '\t' << full_mat[i*full_size+j];
+            std::cout << '\n';
+            for(size_t j = 0; j < full_size; j++)
+            {
+                std::cout << '\t' << full_mat[i*full_size+j];
+            }
         }
     }
-    delete [] triangle;
     return full_mat;
 }
 
@@ -62,9 +86,12 @@ void hf_wfn::make_core_H()
     {
         core_H[j] = ke_ints[j] + eN_ints[j];
     }
+    if(false)
+    {
     for(size_t i = 0; i < mat_size; i++)
     {
         std::cout << core_H[i] << std::endl;
+    }
     }
     return;
 }

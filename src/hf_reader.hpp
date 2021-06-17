@@ -41,18 +41,13 @@ int get_mat_size(const char * infile_name)
     return findex * (findex + 1) / 2;
 }
 
-double * read_2D_ints(const char * infile_name, hf_wfn & wfn)
+void read_2D_ints(const char * infile_name, hf_wfn & wfn, double * & storage_location)
 {
-    double * store_type = NULL;
     if (wfn.mat_size == -1)
     {
         wfn.mat_size = get_mat_size(infile_name);
     }
-    std::cout << "\n\nAllocating new memory to store stuff?\n\n";
-    std::cout << "Mat size: " << wfn.mat_size;
-    std::cout << "\n\n";
-    store_type = new double[wfn.mat_size];
-    std::cout << "\n\nAllocation made\n\n";
+    storage_location = new double[wfn.mat_size];
 
     size_t index = 0;
     std::ifstream open_file = file_opener(infile_name);
@@ -61,17 +56,23 @@ double * read_2D_ints(const char * infile_name, hf_wfn & wfn)
     {
         open_file >> temp;
         open_file >> temp;
-        open_file >> store_type[index++];
+        open_file >> storage_location[index++];
     }
     open_file.close();
-    for (size_t j = 0; j < wfn.mat_size; j++)
+
+    if(false)
     {
-        std::cout << store_type[j] << std::endl;
+        for (size_t j = 0; j < wfn.mat_size; j++)
+        {
+            std::cout << storage_location[j] << std::endl;
+        }
     }
+    return;
 
     // At this point, we're stored into a 1D array for the lower triangle.
     // In the future just use this, but for now let's use the larger 2D
     // Full version since these matrices are small enough
+    /*
     if(false){
     double * full_mat = NULL;
     int full_size = (-1+std::pow(1+8*wfn.mat_size,0.5))/2;
@@ -84,7 +85,7 @@ double * read_2D_ints(const char * infile_name, hf_wfn & wfn)
         std::cout << "i is\t" << i << std::endl;
         if (counteri == counterj)
         {
-            full_mat[counteri*full_size+counterj]=store_type[i];
+            full_mat[counteri*full_size+counterj]=storage_location[i];
             std::cout << "SpotD: " << counteri*full_size + counterj << "\t" << counterj*full_size + counteri << "\n";
             counteri++;
             counterj=0;
@@ -92,8 +93,8 @@ double * read_2D_ints(const char * infile_name, hf_wfn & wfn)
         else
         {
             std::cout << "Spot: " << counteri*full_size + counterj << "\t" << counterj*full_size + counteri << "\n";
-            full_mat[counteri*full_size+counterj]=store_type[i];
-            full_mat[counterj*full_size+counteri]=store_type[i];
+            full_mat[counteri*full_size+counterj]=storage_location[i];
+            full_mat[counterj*full_size+counteri]=storage_location[i];
             counterj++;
         }
         std::cout << counteri << "\t" << counterj << "\n"; 
@@ -108,7 +109,6 @@ double * read_2D_ints(const char * infile_name, hf_wfn & wfn)
 
         }    
     }
-
-    delete[] store_type;
+    */
     //return full_mat;
 }
