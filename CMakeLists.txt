@@ -21,3 +21,7 @@ target_link_libraries(Solution ${LAPACK_LIBRARIES})
 
 # Add HF exeutable
 add_executable(HF ./src/hf.cpp ./src/hf_wfn.cpp ./src/tei_handler.cpp)
+
+# Link it to LAPACK for matrix operations
+target_link_libraries(HF ${LAPACK_LIBRARIES})
+
