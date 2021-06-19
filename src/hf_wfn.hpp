@@ -46,12 +46,31 @@ class hf_wfn
         double * core_H = nullptr;
         double * sym_orth_mat = nullptr;
         two_electron_integral_handler teis;
+        double * fock;
+        double * c_mat;
+        double * density_mat;
+        double total_e;
+        double * inbasis_fock;
     hf_wfn(){};
-    ~hf_wfn(){delete [] sints; delete [] ke_ints; delete [] eN_ints; delete [] core_H;};
+    ~hf_wfn(){delete [] sints; 
+              delete [] ke_ints; 
+              delete [] eN_ints; 
+              delete [] core_H; 
+              delete[] sym_orth_mat; 
+              delete[] fock;
+              delete[] c_mat; 
+              delete[] density_mat;};
 
     void print_sints();
     void make_core_H();
     void orthogonalize_basis();
+    void make_initial_fock();
+    void make_density_mat();
+    void build_fock();
+    void diagonalize_fock();
+    void evaluate_energy();
+    void update_fock();
+    
 };
 
 #endif

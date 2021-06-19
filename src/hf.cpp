@@ -18,7 +18,19 @@ int main(int argc, char ** argv)
     read_4D_ints(argv[4],master_wfn);
 
     master_wfn.orthogonalize_basis();
+    master_wfn.make_initial_fock();
+    master_wfn.diagonalize_fock();
+    master_wfn.make_density_mat();
+    master_wfn.evaluate_energy();
     
+    for(int i = 0; i < 100; i++)
+    {
+        master_wfn.update_fock();
+        master_wfn.diagonalize_fock();
+        master_wfn.make_density_mat();
+        master_wfn.evaluate_energy();
+    }
+
     return 0;
 
 }
