@@ -31,6 +31,7 @@ int main(int argc, char ** argv)
         master_wfn.evaluate_energy();
     }
 
+    master_wfn.print_mos();
     return 0;
 
 }

@@ -70,6 +70,7 @@ class hf_wfn
     void diagonalize_fock();
     void evaluate_energy();
     void update_fock();
+    void print_mos();
     
 };
 

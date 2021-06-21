@@ -339,3 +339,9 @@ void hf_wfn::update_fock()
     dgemm_(&N,&N,&nao,&nao,&nao,&oned,temp,&nao,sym_orth_mat,&nao,&zerod,fock,&nao);
     
 }
+
+void hf_wfn::print_mos()
+{
+    int nao = std::pow((-1+std::pow(1+8*mat_size,0.5))/2,1);
+    print_mat(c_mat,nao);
+}
