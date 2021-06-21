@@ -35,5 +35,8 @@ void two_electron_integral_handler::dump_tei()
 
 double two_electron_integral_handler::operator()(int i, int j, int k, int l)
 {
-    return _teis.find(_get_compound_index(i,j,k,l))->second;
+    std::map<int,double>::iterator eri_val = _teis.find(_get_compound_index(i,j,k,l));
+    if (eri_val != _teis.end())
+        return eri_val->second;
+    return 0.0;
 }

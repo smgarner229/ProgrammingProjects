@@ -86,12 +86,12 @@ double * triangle_to_full_mat(double * & triangle, const int & tri_size)
 
 double two_center_integral::operator()(int i, int j)
 {
-
+    return 0.0;
 }
 
 bool two_center_integral::operator==(const two_center_integral & other)
 {
-
+    return false;
 }
 
 void hf_wfn::print_sints()
@@ -100,6 +100,7 @@ void hf_wfn::print_sints()
     {
         std::cout << sints[i] << std::endl;
     }
+    return;
 }
 
 void hf_wfn::make_core_H()
@@ -257,6 +258,12 @@ void hf_wfn::diagonalize_fock()
     dgemm_(&N,&N,&full_size,&full_size,&full_size,&oned,sym_orth_mat,&full_size,eigR,&full_size,&zerod,c_mat,&full_size);
 
     //Memory leak while I get this working
+    delete[] eigRE;
+    delete[] eigIM;
+    delete[] eigL;
+    delete[] eigR;
+    delete[] work;
+    delete[] temp;
 }
 
 void hf_wfn::make_density_mat()

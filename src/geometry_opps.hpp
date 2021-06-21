@@ -1,5 +1,5 @@
 #ifndef GEOMETRY_OPPS_HPP
-#define GEOMETRY_OPP_HPP
+#define GEOMETRY_OPPS_HPP
 
 #include <cmath>
 
