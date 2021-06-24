@@ -47,6 +47,7 @@ void read_2D_ints(const char * infile_name, hf_wfn & wfn, double * & storage_loc
     if (wfn.mat_size == -1)
     {
         wfn.mat_size = get_mat_size(infile_name);
+        wfn.nao = std::pow((-1+std::pow(1+8*wfn.mat_size,0.5))/2,1);
     }
     storage_location = new double[wfn.mat_size];
 
