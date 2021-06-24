@@ -122,26 +122,56 @@ void hf_wfn::make_core_H()
     return;
 }
 
+void transform_row_to_column_triangle(const double * rowmajor, double * & column_major, const int & size, const int & matsize)
+{
+    for(size_t i = 0; i<size; i++)
+    {
+        for(size_t j = i; j < size; j++)
+            column_major[i+j*size] = rowmajor[i*size + j]; 
+    }
+    for(size_t i = 0; i < matsize; i++)
+        std::cout << rowmajor[i] << "\t" << column_major[i] << std::endl;
+}
+
 void hf_wfn::orthogonalize_basis()
 {
+
     int full_size = std::pow((-1+std::pow(1+8*mat_size,0.5))/2,1);
     double * temp = new double[full_size*full_size];
     temp = triangle_to_full_mat(sints,mat_size);
     char N = 'N';
     char V = 'V';
+    char L = 'L';
+    char U = 'U';
     int one = 1;
     double * eigRE = new double[full_size]{0.0};
     double * eigIM = new double[full_size]{0.0};
     double * eigL = new double[full_size*full_size]{0.0};
     double * eigR = new double[full_size*full_size]{0.0};
-    double * work = new double[full_size*full_size]{0.0};
+    double * work = new double[4*full_size]{0.0};
     int lwork = 4 * full_size;
     int info = 0;
+    int three=3;
+
+
+    dsyev_(&V,&L,&full_size,temp,&full_size,eigRE,work,&lwork,&info);
+    std::cout << info << std::endl;
+    for(size_t i = 0; i < full_size; i++)
+    {
+        std::cout << eigRE[i] << std::endl;
+    }
+    print_mat(temp,full_size);
 
     // Diagonalize the overlap matrix
     // Eigenvalues are stored in eigRE (since we know these should be real.....for now....)
     // Associated Eigenvectors are stored in eigR
+    /*
     dgeev_(&N,&V,&full_size,temp,&full_size,eigRE,eigIM,eigL,&full_size,eigR,&full_size,work,&lwork,&info);
+    for(size_t i = 0; i < full_size; i++)
+        std::cout << eigRE[i] << std::endl;
+    print_mat(eigR,full_size);
+    exit(1);
+    */
 
     double * eigval_mat = new double[full_size*full_size]{0.0};
     for (size_t i = 0; i < full_size; i++)
@@ -155,11 +185,13 @@ void hf_wfn::orthogonalize_basis()
     double zerod =0.;
 
     // Reuse the temp matrix to store the result of L*S
-    dgemm_(&N,&N,&full_size,&full_size,&full_size,&oned,eigR,&full_size,eigval_mat,&full_size,&zerod,temp,&full_size);
+    dgemm_(&N,&N,&full_size,&full_size,&full_size,&oned,temp,&full_size,eigval_mat,&full_size,&zerod,orthmat,&full_size);
     sym_orth_mat = new double[full_size*full_size]{0.0};
 
     // Carry out (L*S)*L^T, store the result in sym_orth_mat
-    dgemm_(&N,&T,&full_size,&full_size,&full_size,&oned,temp,&full_size,eigR,&full_size,&zerod,sym_orth_mat,&full_size);
+    dgemm_(&N,&T,&full_size,&full_size,&full_size,&oned,orthmat,&full_size,temp,&full_size,&zerod,sym_orth_mat,&full_size);
+    print_mat(sym_orth_mat,full_size);
+    //exit(1);
 
     //delete[] orthmat;
     delete[] eigRE;
