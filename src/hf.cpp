@@ -20,14 +20,15 @@ int main(int argc, char ** argv)
     master_wfn.make_density_mat();
     master_wfn.evaluate_energy();
     
-    for(int i = 0; i < 100; i++)
+    //while(std::abs(master_wfn.total_e-master_wfn.last_e) > 0.000000001)
+    while(!master_wfn.check_converged())
     {
         master_wfn.update_fock();
         master_wfn.diagonalize_fock();
         master_wfn.make_density_mat();
-        master_wfn.evaluate_energy();
+        master_wfn.evaluate_energy();        
     }
-
+    
     master_wfn.print_mos();
     return 0;
 

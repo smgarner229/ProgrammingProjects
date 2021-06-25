@@ -199,8 +199,23 @@ void hf_wfn::diagonalize_fock()
 
 void hf_wfn::make_density_mat()
 {
-    delete[] density_mat;
+    if(niter) // Not the first iteration
+    {
+        delete[] last_density_mat;
+        last_density_mat = new double[nao*nao];
+        for(size_t i = 0; i < nao*nao; i++)
+        {
+            last_density_mat[i] = density_mat[i];
+        }
+        delete[] density_mat;
+    }
+    else // First iteration
+    {
+        last_density_mat = new double[nao*nao]{0.0};
+        niter++;
+    }
     density_mat = new double[nao*nao]{0.0};
+
     for(size_t i = 0; i < nao; i++)
     {
         for(size_t j = 0; j < nao; j++)
@@ -215,7 +230,8 @@ void hf_wfn::make_density_mat()
 
 void hf_wfn::evaluate_energy()
 {
-    total_e=enuc;
+    last_e  = total_e;
+    total_e = enuc;
     double * ham_mat = new double[nao*nao]{0.0};
     double * result = new double[nao*nao]{0.0};
     
@@ -232,7 +248,6 @@ void hf_wfn::evaluate_energy()
     for(size_t i = 0; i < nao; i++)
     {total_e+=result[i*nao+i];}
 
-    std::cout << total_e << std::endl;
     delete[] ham_mat;
     delete[] result;
     return;
@@ -281,4 +296,14 @@ void hf_wfn::update_fock()
 void hf_wfn::print_mos()
 {
     print_mat(c_mat,nao,true);
+}
+
+bool hf_wfn::check_converged()
+{
+    double dmdiff = 0.0;
+    for(size_t i = 0; i < nao*nao; i++)
+    dmdiff+=std::pow(density_mat[i]-last_density_mat[i],2);
+    dmdiff = std::pow(dmdiff,0.5);
+    std::cout << std::fixed << std::setprecision(15) << total_e <<  "\t" << std::abs(last_e-total_e) << "\t" << dmdiff << std::endl;
+    return dmdiff < 0.00000000001 && std::abs(last_e-total_e) < 0.00000000001;
 }

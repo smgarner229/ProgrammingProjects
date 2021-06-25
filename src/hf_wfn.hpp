@@ -15,6 +15,7 @@ class hf_wfn
     public:
         size_t mat_size = -1;
         int nao;
+        int niter=0;
         double enuc;
         double * sints = nullptr;
         double * ke_ints = nullptr;
@@ -22,11 +23,14 @@ class hf_wfn
         double * core_H = nullptr;
         double * sym_orth_mat = nullptr;
         two_electron_integral_handler teis;
-        double * fock;
-        double * c_mat;
-        double * density_mat;
+        double * fock = nullptr;
+        double * c_mat = nullptr;
+        double * density_mat = nullptr;
+        double * last_density_mat = nullptr;
         double total_e;
-        double * inbasis_fock;
+        double * inbasis_fock = nullptr;
+        double last_e = 0.0;
+
     hf_wfn(){};
     ~hf_wfn(){delete[] sints; 
               delete[] ke_ints; 
@@ -47,7 +51,8 @@ class hf_wfn
     void evaluate_energy();
     void update_fock();
     void print_mos();
-    
+    bool check_converged();
+
 };
 
 #endif
