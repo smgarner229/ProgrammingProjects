@@ -6,6 +6,9 @@ project(ProgrammingProject)
 # Specify the c++ standard
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_STANDARD 14)
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 # Point to the /src/ subdirectory
 #add_subdirectory(src)
