@@ -28,8 +28,9 @@ int main(int argc, char ** argv)
         master_wfn.make_density_mat();
         master_wfn.evaluate_energy();        
     }
-    
-    master_wfn.print_mos();
+
+    master_wfn.teis.slow_tei_transform(master_wfn.c_mat,master_wfn.nao);
+
     return 0;
 
 }

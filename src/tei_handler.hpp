@@ -21,6 +21,12 @@ class two_electron_integral_handler
         // Print all integrals
         void dump_tei();
 
+        // Performs N^8 Orbital rotation to MO basis
+        void slow_tei_transform(const double * c_mat, const int & norb);
+
+        // Perform N^5 Orbital rotation to MO basis
+        void rotate_integrals(const double * c_mat, const int & norb);
+
 };
 
 
