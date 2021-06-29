@@ -188,6 +188,11 @@ void hf_wfn::diagonalize_fock()
     dsyev_(&V,&L,&nao,fock,&nao,eigRE,work,&lwork,&info);
     sort_mos(nao,eigRE,fock);
  
+    if(!orb_energies) delete[] orb_energies;
+    orb_energies = new double[nao];
+    for(size_t i = 0; i < nao; i++)
+        orb_energies[i] = eigRE[i];
+
     // \mathbf{S}^{-1/2}\mathbf{C_0^'}
     dgemm_(&N,&N,&nao,&nao,&nao,&oned,sym_orth_mat,&nao,fock,&nao,&zerod,c_mat,&nao);
 
@@ -296,6 +301,25 @@ void hf_wfn::update_fock()
 void hf_wfn::print_mos()
 {
     print_mat(c_mat,nao,true);
+}
+
+void hf_wfn::fock_in_mo_basis()
+{
+    double * new_fock = new double[nao*nao]{0.0};
+    for(size_t i = 0; i < nao; i++)
+    {
+        for(size_t j = 0; j < nao; j++)
+        {
+            for(size_t k = 0; k < nao; k++)
+            {
+                for(size_t l = 0; l < nao; l++)
+                {
+                    new_fock[i*nao+j]+=c_mat[i*nao+k]*c_mat[j*nao+l]*inbasis_fock[i*nao + j];
+                }
+            }
+        }
+    }
+    print_mat(new_fock,nao);
 }
 
 bool hf_wfn::check_converged()

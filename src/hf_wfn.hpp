@@ -30,6 +30,7 @@ class hf_wfn
         double total_e;
         double * inbasis_fock = nullptr;
         double last_e = 0.0;
+        double * orb_energies;
 
     hf_wfn(){};
     ~hf_wfn(){delete[] sints; 
@@ -51,6 +52,7 @@ class hf_wfn
     void evaluate_energy();
     void update_fock();
     void print_mos();
+    void fock_in_mo_basis();
     bool check_converged();
 
 };
